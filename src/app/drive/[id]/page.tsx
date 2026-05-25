@@ -15,6 +15,8 @@ import {
   SPEED_LIMIT_LABELS,
 } from "@/lib/compare";
 import { buildCompareUrl } from "@/lib/compare";
+import { JsonLd } from "@/components/json-ld";
+import { getSiteUrl } from "@/lib/site";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -41,8 +43,26 @@ export default async function DriveDetailPage({ params }: PageProps) {
   const drive = getDriveById(id);
   if (!drive) notFound();
 
+  const siteUrl = getSiteUrl();
+  const softwareJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: drive.name,
+    description: drive.tagline,
+    url: drive.website,
+    applicationCategory: "UtilitiesApplication",
+    offers: drive.pricing.map((plan) => ({
+      "@type": "Offer",
+      name: plan.name,
+      price: plan.priceMonthly ?? plan.priceYearly ?? 0,
+      priceCurrency: "CNY",
+    })),
+    mainEntityOfPage: `${siteUrl}/drive/${drive.id}`,
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <JsonLd data={softwareJsonLd} />
       <Button variant="ghost" size="sm" className="mb-6 -ml-2" render={<Link href="/" />}>
         <ArrowLeft className="size-4" />
         返回首页

@@ -19,7 +19,7 @@ export function DriveLogo({ src, name, size = "md", className }: DriveLogoProps)
       alt={`${name} 图标`}
       width={px}
       height={px}
-      quality={95}
+      quality={75}
       sizes={`${px}px`}
       className={cn(
         "shrink-0 rounded-[22%] object-cover shadow-sm ring-1 ring-black/5 dark:ring-white/10",

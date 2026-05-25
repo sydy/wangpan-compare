@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "check:logos": "node scripts/check-logos.mjs",
+    "validate:data": "tsx scripts/validate-data.ts",
+    "prebuild": "npm run check:logos && npm run validate:data",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -30,6 +33,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "typescript": "^5"
   }
 }

@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { DRIVES } from "@/data/drives";
-
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
+import { getSiteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const BASE = getSiteUrl();
+
   const staticRoutes = ["", "/compare", "/scenarios"].map((path) => ({
     url: `${BASE}${path}`,
     lastModified: new Date(),

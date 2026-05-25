@@ -29,11 +29,13 @@ npm run dev
 
 ## 部署
 
-支持 Vercel、Cloudflare Pages 等。可选环境变量：
+支持 Vercel、Cloudflare Pages 等。生产环境请配置站点 URL（用于 sitemap、Open Graph、JSON-LD）：
 
 ```env
 NEXT_PUBLIC_SITE_URL=https://你的域名
 ```
+
+可参考 [`.env.example`](.env.example)。构建前会自动检查 Logo 文件与数据一致性（`npm run check:logos`、`npm run validate:data`）。
 
 ## 免责声明
 
