@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 网盘横评
 
-## Getting Started
+国内主流网盘一站式对比（含 123 云盘）：价格、容量、限速、功能矩阵与场景推荐。
 
-First, run the development server:
+## 功能
+
+- 首页快速勾选最多 4 款网盘进入对比
+- `/compare` 分类对比表，支持差异高亮与 URL 分享（`?ids=baidu,aliyun,quark`）
+- `/drive/[id]` 单产品详情（套餐、功能、优缺点）
+- `/scenarios` 按看视频、备份、分享、办公等场景推荐
+
+## 开发
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开 [http://localhost:3000](http://localhost:3000)。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 更新对比数据
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. 在 [`src/data/drives.ts`](src/data/drives.ts) 中增删或修改网盘条目
+2. 新维度在 [`src/data/types.ts`](src/data/types.ts) 的 `FeatureKey` 与 [`src/data/features.ts`](src/data/features.ts) 中注册
+3. 场景推荐编辑 [`src/data/scenarios.ts`](src/data/scenarios.ts)
+4. Logo：运行 `python3 scripts/download-logos.py` 从 App Store 拉取 512px 官方应用图标（见 [`public/logos/SOURCES.md`](public/logos/SOURCES.md)）
 
-## Learn More
+修改后执行 `npm run build` 确认无类型错误。
 
-To learn more about Next.js, take a look at the following resources:
+## 部署
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+支持 Vercel、Cloudflare Pages 等。可选环境变量：
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_SITE_URL=https://你的域名
+```
 
-## Deploy on Vercel
+## 免责声明
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+价格与功能以各平台官网为准，本站仅供参考，不构成购买建议。
