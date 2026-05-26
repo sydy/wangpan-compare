@@ -7,10 +7,11 @@ import { FEATURE_CATEGORIES } from "@/data/features";
 import { CATEGORY_LABELS } from "@/data/types";
 import { CompareMatrixTable } from "@/components/compare-matrix-table";
 import { ComparePricingMatrix } from "@/components/compare-pricing-matrix";
+import { CompareHighlightsMatrix } from "@/components/compare-highlights-matrix";
 import { SegmentButtons } from "@/components/segment-buttons";
 
 /** 会员套餐对比（勿与 FeatureCategory 的 pricing「价格」维度混淆） */
-type CompareTab = FeatureCategory | "membership";
+type CompareTab = FeatureCategory | "membership" | "highlights";
 
 interface CompareMatrixTabsProps {
   drives: Drive[];
@@ -29,6 +30,7 @@ export function CompareMatrixTabs({ drives, diffMode }: CompareMatrixTabsProps) 
         label: CATEGORY_LABELS[cat],
       })),
       { value: "membership", label: "会员套餐" },
+      { value: "highlights", label: "特色" },
     ],
     []
   );
@@ -54,6 +56,8 @@ export function CompareMatrixTabs({ drives, diffMode }: CompareMatrixTabsProps) 
       <div>
         {category === "membership" ? (
           <ComparePricingMatrix drives={drives} diffMode={diffMode} />
+        ) : category === "highlights" ? (
+          <CompareHighlightsMatrix drives={drives} />
         ) : (
           <CompareMatrixTable
             drives={drives}

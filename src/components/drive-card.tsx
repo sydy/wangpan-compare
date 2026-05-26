@@ -5,6 +5,7 @@ import { DriveLogo } from "@/components/drive-logo";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { SPEED_LIMIT_LABELS } from "@/lib/compare";
+import { DriveHighlights } from "@/components/drive-highlights";
 
 interface DriveCardProps {
   drive: Drive;
@@ -40,6 +41,12 @@ export function DriveCard({ drive }: DriveCardProps) {
           )}
           <Badge variant="outline">{drive.pricing.length} 档会员</Badge>
         </div>
+        {drive.highlights.length > 0 && (
+          <DriveHighlights
+            highlights={drive.highlights.slice(0, 3)}
+            variant="compact"
+          />
+        )}
         <Link
           href={`/compare?ids=${drive.id}`}
           className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"

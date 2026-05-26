@@ -99,6 +99,16 @@ export function validateAllData(): void {
         );
       }
     }
+
+    const highlightIds = new Set<string>();
+    for (const h of drive.highlights) {
+      if (highlightIds.has(h.id)) {
+        throw new Error(
+          `Drive "${drive.id}": duplicate highlight id "${h.id}"`
+        );
+      }
+      highlightIds.add(h.id);
+    }
   }
 
   for (const scenario of SCENARIOS) {

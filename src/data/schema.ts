@@ -50,6 +50,17 @@ export const DriveClientsSchema = z.object({
   android: z.boolean(),
 });
 
+export const DriveHighlightSchema = z.object({
+  id: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/),
+  label: z.string().min(1),
+  description: z.string().optional(),
+  category: z.enum(["dev", "share", "media", "sync", "other"]),
+  tier: z.enum(["free", "vip"]).optional(),
+});
+
 const featureValueSchema = z.union([z.boolean(), z.string(), z.number()]);
 
 export const DriveFeaturesSchema = z
@@ -85,6 +96,7 @@ export const DriveSchema = z.object({
   pricing: z.array(DrivePlanSchema).min(1),
   features: DriveFeaturesSchema,
   clients: DriveClientsSchema,
+  highlights: z.array(DriveHighlightSchema).min(1).max(12),
   pros: z.array(z.string().min(1)).min(1),
   cons: z.array(z.string().min(1)).min(1),
 });

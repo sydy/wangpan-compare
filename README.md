@@ -32,6 +32,8 @@ npm run dev
 npm run validate:data
 ```
 
+5. 特色功能：在 `highlights[]` 中维护差异化能力（不进通用 `features` 矩阵）；对比页「特色」Tab 支持按产品 / 稀疏矩阵查看
+
 修改后执行 `npm run build` 确认无类型错误。对比页「会员套餐」Tab 支持按档位对齐与完整套餐列表两种视图。
 
 ## 部署

@@ -21,6 +21,7 @@ import {
   yearlyPricePerGb,
 } from "@/lib/pricing";
 import { TIER_LABELS } from "@/data/types";
+import { DriveHighlights } from "@/components/drive-highlights";
 import { buildCompareUrl } from "@/lib/compare";
 import { JsonLd } from "@/components/json-ld";
 import { getSiteUrl } from "@/lib/site";
@@ -129,6 +130,16 @@ export default async function DriveDetailPage({ params }: PageProps) {
           </CardContent>
         </Card>
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-xl font-semibold">特色功能</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          以下为该产品差异化能力，不一定与其他网盘逐项对应。
+        </p>
+        <div className="mt-4">
+          <DriveHighlights highlights={drive.highlights} />
+        </div>
+      </section>
 
       <section className="mt-12">
         <div className="flex flex-wrap items-center justify-between gap-3">

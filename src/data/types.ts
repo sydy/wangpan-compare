@@ -88,6 +88,29 @@ export interface DriveClients {
   android: boolean;
 }
 
+/** 特色功能分类（用于分组展示，非通用对比矩阵项） */
+export type HighlightCategory = "dev" | "share" | "media" | "sync" | "other";
+
+/** 特色功能所需会员档位 */
+export type HighlightTier = "free" | "vip";
+
+export interface DriveHighlight {
+  id: string;
+  label: string;
+  description?: string;
+  category: HighlightCategory;
+  /** 默认 free；vip 表示需付费会员 */
+  tier?: HighlightTier;
+}
+
+export const HIGHLIGHT_CATEGORY_LABELS: Record<HighlightCategory, string> = {
+  dev: "开发 / 挂载",
+  share: "分享 / 协作",
+  media: "影音 / 下载",
+  sync: "同步 / 备份",
+  other: "其他",
+};
+
 export interface Drive {
   id: DriveId;
   name: string;
@@ -105,6 +128,8 @@ export interface Drive {
   pricing: DrivePlan[];
   features: Record<FeatureKey, boolean | string | number>;
   clients: DriveClients;
+  /** 差异化特色能力（不适合放入通用功能矩阵） */
+  highlights: DriveHighlight[];
   pros: string[];
   cons: string[];
 }
