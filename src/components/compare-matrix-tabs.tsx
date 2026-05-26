@@ -1,20 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Minus } from "lucide-react";
 import type { Drive, FeatureCategory } from "@/data/types";
 import { FEATURE_CATEGORIES } from "@/data/features";
 import { CATEGORY_LABELS } from "@/data/types";
 import { CompareMatrixTable } from "@/components/compare-matrix-table";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ComparePricingMatrix } from "@/components/compare-pricing-matrix";
+import { SegmentButtons } from "@/components/segment-buttons";
+
+/** 会员套餐对比（勿与 FeatureCategory 的 pricing「价格」维度混淆） */
+type CompareTab = FeatureCategory | "membership";
+
 interface CompareMatrixTabsProps {
   drives: Drive[];
   diffMode: boolean;
 }
 
 export function CompareMatrixTabs({ drives, diffMode }: CompareMatrixTabsProps) {
-  const [category, setCategory] = useState<FeatureCategory>(
+  const [category, setCategory] = useState<CompareTab>(
     FEATURE_CATEGORIES[0]
+  );
+
+  const tabOptions = useMemo(
+    () => [
+      ...FEATURE_CATEGORIES.map((cat) => ({
+        value: cat,
+        label: CATEGORY_LABELS[cat],
+      })),
+      { value: "membership", label: "会员套餐" },
+    ],
+    []
   );
 
   if (drives.length === 0) {
@@ -27,25 +43,25 @@ export function CompareMatrixTabs({ drives, diffMode }: CompareMatrixTabsProps) 
   }
 
   return (
-    <Tabs
-      value={category}
-      onValueChange={(v) => setCategory(v as FeatureCategory)}
-      className="w-full"
-    >
-      <TabsList className="mb-4 flex w-full flex-wrap h-auto gap-1">
-        {FEATURE_CATEGORIES.map((cat) => (
-          <TabsTrigger key={cat} value={cat}>
-            {CATEGORY_LABELS[cat]}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-      <div className="mt-0">
-        <CompareMatrixTable
-          drives={drives}
-          category={category}
-          diffMode={diffMode}
-        />
+    <div className="w-full space-y-4">
+      <SegmentButtons
+        ariaLabel="对比分类"
+        value={category}
+        onChange={(v) => setCategory(v as CompareTab)}
+        options={tabOptions}
+        className="mb-0 flex w-full flex-wrap h-auto gap-1"
+      />
+      <div>
+        {category === "membership" ? (
+          <ComparePricingMatrix drives={drives} diffMode={diffMode} />
+        ) : (
+          <CompareMatrixTable
+            drives={drives}
+            category={category}
+            diffMode={diffMode}
+          />
+        )}
       </div>
-    </Tabs>
+    </div>
   );
 }

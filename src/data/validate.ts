@@ -7,7 +7,11 @@ import {
   ScenarioSchema,
 } from "./schema";
 import { getDriveFeature } from "@/lib/compare";
-import type { FeatureKey } from "./types";
+import {
+  minMonthlyFromPlans,
+  minYearlyFromPlans,
+} from "@/lib/pricing";
+import type { FeatureKey, TierIndex } from "./types";
 
 export function validateAllData(): void {
   for (const meta of FEATURES) {
@@ -45,6 +49,53 @@ export function validateAllData(): void {
       if (drive.clients[clientKey] !== fromFeature) {
         throw new Error(
           `Drive "${drive.id}": clients.${clientKey} (${drive.clients[clientKey]}) does not match features.${featureKey} (${fromFeature})`
+        );
+      }
+    }
+
+    if (drive.freeStorageGb !== drive.features.freeStorageGb) {
+      throw new Error(
+        `Drive "${drive.id}": freeStorageGb (${drive.freeStorageGb}) does not match features.freeStorageGb (${drive.features.freeStorageGb})`
+      );
+    }
+
+    const tierIndices = drive.pricing.map((p) => p.tierIndex).sort();
+    const uniqueTiers = new Set(tierIndices);
+    if (uniqueTiers.size !== tierIndices.length) {
+      throw new Error(
+        `Drive "${drive.id}": duplicate tierIndex in pricing`
+      );
+    }
+    for (let i = 0; i < tierIndices.length; i++) {
+      const expected = (i + 1) as TierIndex;
+      if (tierIndices[i] !== expected) {
+        throw new Error(
+          `Drive "${drive.id}": tierIndex must be consecutive from 1, got [${tierIndices.join(", ")}]`
+        );
+      }
+    }
+
+    const minMonthly = minMonthlyFromPlans(drive.pricing);
+    const minYearly = minYearlyFromPlans(drive.pricing);
+    const featureMonthly = drive.features.minMonthlyPrice as number;
+    const featureYearly = drive.features.minYearlyPrice as number;
+
+    if (minMonthly !== undefined) {
+      if (featureMonthly !== minMonthly) {
+        throw new Error(
+          `Drive "${drive.id}": minMonthlyPrice (${featureMonthly}) !== min of pricing (${minMonthly})`
+        );
+      }
+    } else if (featureMonthly !== 0) {
+      throw new Error(
+        `Drive "${drive.id}": no monthly pricing but minMonthlyPrice is ${featureMonthly} (expected 0)`
+      );
+    }
+
+    if (minYearly !== undefined) {
+      if (featureYearly !== minYearly) {
+        throw new Error(
+          `Drive "${drive.id}": minYearlyPrice (${featureYearly}) !== min of pricing (${minYearly})`
         );
       }
     }

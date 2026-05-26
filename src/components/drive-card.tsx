@@ -38,6 +38,7 @@ export function DriveCard({ drive }: DriveCardProps) {
           {minMonthly > 0 && (
             <Badge variant="outline">¥{minMonthly}/月起</Badge>
           )}
+          <Badge variant="outline">{drive.pricing.length} 档会员</Badge>
         </div>
         <Link
           href={`/compare?ids=${drive.id}`}

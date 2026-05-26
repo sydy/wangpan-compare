@@ -55,13 +55,30 @@ export interface FeatureMeta {
   numberFormat?: NumberFormat;
 }
 
+/** 付费档位序号：1=入门，2=进阶，3=最高（按标价从低到高） */
+export type TierIndex = 1 | 2 | 3;
+
 export interface DrivePlan {
   name: string;
+  /** 档位序号，用于跨产品对齐对比 */
+  tierIndex: TierIndex;
   priceMonthly?: number;
   priceYearly?: number;
   storageGb: number;
   notes?: string;
+  /** 官网原始套餐名（默认可与 name 相同） */
+  officialName?: string;
+  /** 该档位价格来源页 */
+  sourceUrl?: string;
+  /** 该档位核对日期 YYYY-MM-DD */
+  verifiedAt?: string;
 }
+
+export const TIER_LABELS: Record<TierIndex, string> = {
+  1: "入门档",
+  2: "进阶档",
+  3: "最高档",
+};
 
 export interface DriveClients {
   web: boolean;
@@ -79,6 +96,8 @@ export interface Drive {
   logo: string;
   brandColor: string;
   website: string;
+  /** 会员/定价页直达链接 */
+  pricingUrl?: string;
   updatedAt: string;
   freeStorageGb: number;
   maxFileSizeGb?: number;

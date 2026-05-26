@@ -22,13 +22,25 @@ export const FeatureMetaSchema = z.object({
   numberFormat: z.enum(["storage", "price"]).optional(),
 });
 
-export const DrivePlanSchema = z.object({
-  name: z.string().min(1),
-  priceMonthly: z.number().nonnegative().optional(),
-  priceYearly: z.number().nonnegative().optional(),
-  storageGb: z.number().nonnegative(),
-  notes: z.string().optional(),
-});
+export const DrivePlanSchema = z
+  .object({
+    name: z.string().min(1),
+    tierIndex: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+    priceMonthly: z.number().nonnegative().optional(),
+    priceYearly: z.number().nonnegative().optional(),
+    storageGb: z.number().nonnegative(),
+    notes: z.string().optional(),
+    officialName: z.string().min(1).optional(),
+    sourceUrl: z.string().url().optional(),
+    verifiedAt: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .optional(),
+  })
+  .refine(
+    (p) => p.priceMonthly !== undefined || p.priceYearly !== undefined,
+    { message: "Each plan must have priceMonthly or priceYearly" }
+  );
 
 export const DriveClientsSchema = z.object({
   web: z.boolean(),
@@ -65,6 +77,7 @@ export const DriveSchema = z.object({
   logo: z.string().startsWith("/logos/"),
   brandColor: z.string(),
   website: z.string().url(),
+  pricingUrl: z.string().url().optional(),
   updatedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   freeStorageGb: z.number().nonnegative(),
   maxFileSizeGb: z.number().nonnegative().optional(),

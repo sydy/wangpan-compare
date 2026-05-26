@@ -20,12 +20,19 @@ npm run dev
 
 ## 更新对比数据
 
-1. 在 [`src/data/drives.ts`](src/data/drives.ts) 中增删或修改网盘条目
-2. 新维度在 [`src/data/types.ts`](src/data/types.ts) 的 `FeatureKey` 与 [`src/data/features.ts`](src/data/features.ts) 中注册
-3. 场景推荐编辑 [`src/data/scenarios.ts`](src/data/scenarios.ts)
-4. Logo：运行 `python3 scripts/download-logos.py` 从 App Store 拉取 512px 官方应用图标（见 [`public/logos/SOURCES.md`](public/logos/SOURCES.md)）
+1. 对照各平台官网会员/定价页，在 [`src/data/drives.ts`](src/data/drives.ts) 中更新 `pricing`（含 `tierIndex`、`sourceUrl`、`verifiedAt`）及 `features` 聚合字段
+2. 官网入口与核对说明见 [`src/data/pricing-sources.ts`](src/data/pricing-sources.ts)
+3. 新功能维度在 [`src/data/types.ts`](src/data/types.ts) 的 `FeatureKey` 与 [`src/data/features.ts`](src/data/features.ts) 中注册
+4. 场景推荐编辑 [`src/data/scenarios.ts`](src/data/scenarios.ts)
+5. Logo：运行 `python3 scripts/download-logos.py` 从 App Store 拉取 512px 官方应用图标（见 [`public/logos/SOURCES.md`](public/logos/SOURCES.md)）
 
-修改后执行 `npm run build` 确认无类型错误。
+数据一致性校验：
+
+```bash
+npm run validate:data
+```
+
+修改后执行 `npm run build` 确认无类型错误。对比页「会员套餐」Tab 支持按档位对齐与完整套餐列表两种视图。
 
 ## 部署
 
