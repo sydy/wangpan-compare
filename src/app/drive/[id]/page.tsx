@@ -16,10 +16,12 @@ import {
 } from "@/lib/compare";
 import {
   formatPlanPrice,
+  formatPlanYearly,
   formatPricePerGbYear,
   formatStorageGb,
   yearlyPricePerGb,
 } from "@/lib/pricing";
+import { getPricingSource } from "@/data/pricing-sources";
 import { TIER_LABELS } from "@/data/types";
 import { DriveHighlights } from "@/components/drive-highlights";
 import { buildCompareUrl } from "@/lib/compare";
@@ -43,6 +45,7 @@ export async function generateMetadata({
   return {
     title: drive.name,
     description: `${drive.tagline} — 套餐、功能与优缺点详情。`,
+    alternates: { canonical: `/drive/${drive.id}` },
   };
 }
 
@@ -52,6 +55,7 @@ export default async function DriveDetailPage({ params }: PageProps) {
   if (!drive) notFound();
 
   const siteUrl = getSiteUrl();
+  const pricingSource = getPricingSource(drive.id);
   const softwareJsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -88,6 +92,19 @@ export default async function DriveDetailPage({ params }: PageProps) {
             </Badge>
             <Badge variant="secondary">更新于 {drive.updatedAt}</Badge>
           </div>
+          {drive.storageNote && (
+            <p className="mt-4 max-w-3xl text-sm text-muted-foreground leading-relaxed">
+              {drive.storageNote}
+            </p>
+          )}
+          {drive.fileSizeLimits && drive.fileSizeLimits.length > 0 && (
+            <p className="mt-2 text-sm text-muted-foreground">
+              单文件上限：
+              {drive.fileSizeLimits
+                .map((limit) => `${limit.label} ${limit.maxGb} GB`)
+                .join("，")}
+            </p>
+          )}
           <div className="mt-6 flex flex-wrap gap-3">
             <Button render={<Link href={buildCompareUrl([drive.id])} />}>
               加入对比
@@ -189,7 +206,7 @@ export default async function DriveDetailPage({ params }: PageProps) {
                     {formatPlanPrice(plan.priceMonthly, "month")}
                   </td>
                   <td className="px-4 py-3">
-                    {formatPlanPrice(plan.priceYearly, "year")}
+                    {formatPlanYearly(plan)}
                   </td>
                   <td className="px-4 py-3">
                     {formatPricePerGbYear(yearlyPricePerGb(plan))}
@@ -202,11 +219,71 @@ export default async function DriveDetailPage({ params }: PageProps) {
             </tbody>
           </table>
         </div>
-        {drive.pricing.some((p) => p.verifiedAt) && (
-          <p className="mt-2 text-xs text-muted-foreground">
-            套餐标价核对于{" "}
-            {drive.pricing.find((p) => p.verifiedAt)?.verifiedAt ?? drive.updatedAt}
-          </p>
+        <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
+          {drive.pricing.map((plan) => (
+            <li key={plan.tierIndex}>
+              {plan.name}核对于 {plan.verifiedAt ?? drive.updatedAt}
+              {plan.sourceUrl && (
+                <>
+                  {" "}
+                  ·{" "}
+                  <a
+                    href={plan.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2"
+                  >
+                    来源
+                  </a>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+        {drive.addons && drive.addons.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-base font-medium">容量加购</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              以下不是会员档，不参与对比页的档位对齐。
+            </p>
+            <div className="mt-3 overflow-x-auto rounded-xl border">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/50">
+                    <th className="px-4 py-3 text-left font-medium">名称</th>
+                    <th className="px-4 py-3 text-left font-medium">容量</th>
+                    <th className="px-4 py-3 text-left font-medium">月费</th>
+                    <th className="px-4 py-3 text-left font-medium">年费</th>
+                    <th className="px-4 py-3 text-left font-medium">备注</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {drive.addons.map((plan) => (
+                    <tr key={plan.name} className="border-b last:border-0">
+                      <td className="px-4 py-3 font-medium">{plan.name}</td>
+                      <td className="px-4 py-3">
+                        {formatStorageGb(plan.storageGb)}
+                      </td>
+                      <td className="px-4 py-3">
+                        {formatPlanPrice(plan.priceMonthly, "month")}
+                      </td>
+                      <td className="px-4 py-3">{formatPlanYearly(plan)}</td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {plan.notes ?? "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+        {pricingSource && pricingSource.notes.length > 0 && (
+          <ul className="mt-3 list-disc list-inside space-y-1 text-xs text-muted-foreground">
+            {pricingSource.notes.map((note) => (
+              <li key={note}>{note}</li>
+            ))}
+          </ul>
         )}
       </section>
 

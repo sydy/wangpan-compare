@@ -66,7 +66,7 @@ export function ScenarioCards({ compact = false }: { compact?: boolean }) {
                   </div>
                 );
               })}
-              {!compact && (
+              {compact && (
                 <Link
                   href="/scenarios"
                   className="text-sm text-primary hover:underline"

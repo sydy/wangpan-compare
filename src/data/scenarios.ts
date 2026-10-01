@@ -46,7 +46,7 @@ export const SCENARIOS: Scenario[] = [
       {
         driveId: "123",
         rank: 1,
-        reason: "注册即享约 2TB 免费空间，标称上传下载不限速",
+        reason: "实名后标准空间约 2TB；独自上传和大文件计入专业空间，免费约 50GB",
       },
       {
         driveId: "aliyun",

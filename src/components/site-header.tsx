@@ -14,6 +14,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
+          aria-label="网盘横评"
           className="flex items-center gap-2.5 font-semibold tracking-tight text-foreground"
         >
           <BrandIcon className="size-8 shadow-sm" />

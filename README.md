@@ -20,8 +20,8 @@ npm run dev
 
 ## 更新对比数据
 
-1. 对照各平台官网会员/定价页，在 [`src/data/drives.ts`](src/data/drives.ts) 中更新 `pricing`（含 `tierIndex`、`sourceUrl`、`verifiedAt`）及 `features` 聚合字段
-2. 官网入口与核对说明见 [`src/data/pricing-sources.ts`](src/data/pricing-sources.ts)
+1. 对照各平台官网会员/定价页，在 [`src/data/drives.ts`](src/data/drives.ts) 中更新 `pricing`（含 `tierIndex`、`sourceUrl`、`verifiedAt`）及 `features` 聚合字段。多年套餐写 `billingPeriod: "multi_year"` 和 `durationYears`，`priceYearly` 为整段总价。容量加购买 `addons`，不要放进会员档。
+2. 官网入口与核对说明见 [`src/data/pricing-sources.ts`](src/data/pricing-sources.ts)。`lastReviewed` 需与该盘 `updatedAt` 一致；`verifiedAt` / `lastReviewed` 超过 60 天会导致校验失败
 3. 新功能维度在 [`src/data/types.ts`](src/data/types.ts) 的 `FeatureKey` 与 [`src/data/features.ts`](src/data/features.ts) 中注册
 4. 场景推荐编辑 [`src/data/scenarios.ts`](src/data/scenarios.ts)
 5. Logo：运行 `python3 scripts/download-logos.py` 从 App Store 拉取 512px 官方应用图标（见 [`public/logos/SOURCES.md`](public/logos/SOURCES.md)）

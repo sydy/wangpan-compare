@@ -36,8 +36,10 @@ export function DriveCard({ drive }: DriveCardProps) {
           <Badge variant="outline">
             {SPEED_LIMIT_LABELS[drive.speedLimit]}
           </Badge>
-          {minMonthly > 0 && (
+          {minMonthly > 0 ? (
             <Badge variant="outline">¥{minMonthly}/月起</Badge>
+          ) : (
+            <Badge variant="outline">无月付</Badge>
           )}
           <Badge variant="outline">{drive.pricing.length} 档会员</Badge>
         </div>

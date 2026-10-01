@@ -7,6 +7,7 @@ import { parseCompareIds } from "@/lib/compare-url";
 export const metadata: Metadata = {
   title: "网盘对比",
   description: "并排对比国内主流网盘的价格、容量、功能与客户端支持。",
+  alternates: { canonical: "/compare" },
 };
 
 interface ComparePageProps {

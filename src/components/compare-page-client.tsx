@@ -9,7 +9,7 @@ import { CompareMatrix } from "@/components/compare-matrix";
 import { DrivePicker } from "@/components/drive-picker";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
-import { parseCompareIds } from "@/lib/compare-url";
+import { EMPTY_COMPARE_TOKEN, parseCompareIds } from "@/lib/compare-url";
 
 interface ComparePageClientProps {
   initialSelected: DriveId[];
@@ -27,9 +27,8 @@ export function ComparePageClient({ initialSelected }: ComparePageClientProps) {
   const syncUrl = useCallback(
     (ids: DriveId[]) => {
       const params = new URLSearchParams();
-      if (ids.length > 0) params.set("ids", ids.join(","));
-      const q = params.toString();
-      router.replace(q ? `/compare?${q}` : "/compare", { scroll: false });
+      params.set("ids", ids.length > 0 ? ids.join(",") : EMPTY_COMPARE_TOKEN);
+      router.replace(`/compare?${params.toString()}`, { scroll: false });
     },
     [router]
   );
