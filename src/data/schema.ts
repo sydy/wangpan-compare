@@ -31,15 +31,28 @@ export const DrivePlanSchema = z
     storageGb: z.number().nonnegative(),
     notes: z.string().optional(),
     officialName: z.string().min(1).optional(),
-    sourceUrl: z.string().url().optional(),
-    verifiedAt: z
-      .string()
-      .regex(/^\d{4}-\d{2}-\d{2}$/)
-      .optional(),
+    sourceUrl: z.string().url(),
+    verifiedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    billingPeriod: z.enum(["month", "year", "multi_year"]).optional(),
+    durationYears: z.number().positive().optional(),
+    kind: z.enum(["membership", "storage_addon"]).optional(),
   })
   .refine(
     (p) => p.priceMonthly !== undefined || p.priceYearly !== undefined,
     { message: "Each plan must have priceMonthly or priceYearly" }
+  )
+  .refine(
+    (p) =>
+      p.billingPeriod !== "multi_year" ||
+      (p.durationYears !== undefined && p.durationYears >= 2),
+    { message: "multi_year plans require durationYears >= 2" }
+  )
+  .refine(
+    (p) =>
+      p.durationYears === undefined ||
+      p.durationYears <= 1 ||
+      p.billingPeriod === "multi_year",
+    { message: "durationYears > 1 requires billingPeriod multi_year" }
   );
 
 export const DriveClientsSchema = z.object({
@@ -92,8 +105,19 @@ export const DriveSchema = z.object({
   updatedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   freeStorageGb: z.number().nonnegative(),
   maxFileSizeGb: z.number().nonnegative().optional(),
+  fileSizeLimits: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        maxGb: z.number().nonnegative(),
+      })
+    )
+    .min(1)
+    .optional(),
+  storageNote: z.string().min(1).optional(),
   speedLimit: z.enum(["none", "soft", "hard", "vip_only"]),
   pricing: z.array(DrivePlanSchema).min(1),
+  addons: z.array(DrivePlanSchema).optional(),
   features: DriveFeaturesSchema,
   clients: DriveClientsSchema,
   highlights: z.array(DriveHighlightSchema).min(1).max(12),

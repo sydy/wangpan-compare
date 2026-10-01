@@ -27,7 +27,9 @@ import {
   type CompareResult,
 } from "@/lib/compare";
 import {
+  annualizedYearlyPrice,
   formatPlanPrice,
+  formatPlanYearly,
   formatPricePerGbYear,
   formatStorageGb,
   getMaxTierIndex,
@@ -194,11 +196,11 @@ export function ComparePricingMatrix({
                           );
                         } else result = "equal";
                       } else if (row.key === "yearly") {
-                        text = formatPlanPrice(plan.priceYearly, "year");
-                        if (!isBaseline && basePlan?.priceYearly !== undefined) {
+                        text = formatPlanYearly(plan);
+                        if (!isBaseline && basePlan) {
                           result = priceCompareResult(
-                            basePlan.priceYearly,
-                            plan.priceYearly,
+                            annualizedYearlyPrice(basePlan),
+                            annualizedYearlyPrice(plan),
                             "lower"
                           );
                         } else result = "equal";
@@ -269,7 +271,7 @@ export function ComparePricingMatrix({
                       </p>
                       <p>
                         {formatPlanPrice(plan.priceMonthly, "month")}{" "}
-                        · {formatPlanPrice(plan.priceYearly, "year")}
+                        · {formatPlanYearly(plan)}
                       </p>
                       <p className="text-muted-foreground">
                         {formatPricePerGbYear(yearlyPricePerGb(plan))}
@@ -326,7 +328,7 @@ export function ComparePricingMatrix({
                     <dt className="text-muted-foreground">月费</dt>
                     <dd>{formatPlanPrice(plan.priceMonthly, "month")}</dd>
                     <dt className="text-muted-foreground">年费</dt>
-                    <dd>{formatPlanPrice(plan.priceYearly, "year")}</dd>
+                    <dd>{formatPlanYearly(plan)}</dd>
                     <dt className="text-muted-foreground">空间</dt>
                     <dd>{formatStorageGb(plan.storageGb)}</dd>
                     <dt className="text-muted-foreground">元/GB·年</dt>

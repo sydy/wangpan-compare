@@ -4,6 +4,7 @@ import { ScenarioCards } from "@/components/scenario-cards";
 export const metadata: Metadata = {
   title: "场景推荐",
   description: "按看视频、备份、分享、办公等场景推荐合适的网盘。",
+  alternates: { canonical: "/scenarios" },
 };
 
 export default function ScenariosPage() {

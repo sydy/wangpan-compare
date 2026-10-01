@@ -22,7 +22,11 @@ export function formatFeatureValue(
     if (typeof value !== "number" || value < 0) return "—";
     const fmt = options?.numberFormat ?? "storage";
     if (fmt === "price") {
-      if (value === 0) return "免费";
+      if (value === 0) {
+        if (options?.key === "minMonthlyPrice") return "无月付";
+        if (options?.key === "minYearlyPrice") return "无年付";
+        return "—";
+      }
       const suffix =
         options?.key === "minYearlyPrice"
           ? "/年"
@@ -76,6 +80,10 @@ export function compareFeatureValues(
   if (compareType === "number") {
     if (typeof baseline !== "number" || typeof current !== "number")
       return "na";
+    // 0 表示没有对应周期的标价（如无月付），不能当成更便宜
+    if (better === "lower" && (baseline === 0 || current === 0)) {
+      return baseline === current ? "equal" : "na";
+    }
     if (baseline === current) return "equal";
     if (better === "higher") {
       return current > baseline ? "better" : "worse";

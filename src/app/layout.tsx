@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   description:
     "百度网盘、阿里云盘、夸克、微云、115、123云盘、天翼、迅雷等主流网盘价格、容量、功能一站式对比。",
   keywords: ["网盘对比", "百度网盘", "阿里云盘", "夸克网盘", "网盘评测"],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "网盘横评 — 国内主流网盘快速对比",
     description: "价格、容量、限速、功能矩阵一站式对比",

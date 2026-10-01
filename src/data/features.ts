@@ -12,7 +12,7 @@ export const FEATURES: FeatureMeta[] = [
   {
     key: "minMonthlyPrice",
     label: "最低月费",
-    description: "主流会员套餐月付起步价（元）",
+    description: "主流会员月付起步价（元）；没有月付标价时显示「无月付」，不是免费",
     category: "pricing",
     compareType: "number",
     better: "lower",
@@ -37,7 +37,7 @@ export const FEATURES: FeatureMeta[] = [
   {
     key: "maxFileSizeGb",
     label: "单文件上限",
-    description: "单次上传文件大小上限（GB）",
+    description: "单文件上限（GB）。各档不同时，对比值取已核对的最高档，分档见详情",
     category: "storage",
     compareType: "number",
     better: "higher",

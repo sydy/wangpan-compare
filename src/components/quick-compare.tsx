@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { DRIVES } from "@/data/drives";
+import { DEFAULT_COMPARE_IDS, DRIVES } from "@/data/drives";
 import type { DriveId } from "@/data/types";
 import { buildCompareUrl } from "@/lib/compare";
 import { DriveLogo } from "@/components/drive-logo";
@@ -23,10 +23,7 @@ export function QuickCompare() {
   };
 
   const goCompare = () => {
-    const ids =
-      selected.length > 0
-        ? selected
-        : (DRIVES.slice(0, 3).map((d) => d.id) as DriveId[]);
+    const ids = selected.length > 0 ? selected : DEFAULT_COMPARE_IDS;
     router.push(buildCompareUrl(ids));
   };
 

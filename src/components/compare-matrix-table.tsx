@@ -27,12 +27,14 @@ function CellValue({
   compareType,
   result,
   diffMode,
+  title,
 }: {
   value: boolean | string | number;
   featureKey: FeatureKey;
   compareType: "boolean" | "number" | "string";
   result: CompareResult;
   diffMode: boolean;
+  title?: string;
 }) {
   if (compareType === "boolean" && typeof value === "boolean") {
     return value ? (
@@ -45,6 +47,7 @@ function CellValue({
   const text = formatFeatureValueByKey(value, featureKey);
   return (
     <span
+      title={title}
       className={cn(
         "text-sm",
         diffMode &&
@@ -139,6 +142,13 @@ export function CompareMatrixTable({
                         compareType={meta.compareType}
                         result={result}
                         diffMode={diffMode && colIndex > 0}
+                        title={
+                          meta.key === "maxFileSizeGb" && drive.fileSizeLimits
+                            ? drive.fileSizeLimits
+                                .map((limit) => `${limit.label} ${limit.maxGb}GB`)
+                                .join(" / ")
+                            : undefined
+                        }
                       />
                     </TableCell>
                   );
